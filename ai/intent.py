@@ -15,9 +15,9 @@ def _strip_fences(raw: str) -> str:
     return raw.strip()
 
 
-async def get_format_spec(manifest: dict, user_prompt: str) -> dict:
+async def get_format_spec(manifest: dict, user_prompt: str, content_md: str = "") -> dict:
     """
-    Call Claudible (OpenAI-compatible) with the manifest + user prompt.
+    Call Claudible (OpenAI-compatible) with manifest + content_md + user prompt.
     Returns a parsed Format Spec dict.
     Raises AIError on API failure or invalid JSON.
     """
@@ -29,10 +29,17 @@ async def get_format_spec(manifest: dict, user_prompt: str) -> dict:
         base_url=settings.ai_base_url,
     )
 
-    user_message = (
-        f"manifest:\n{json.dumps(manifest, ensure_ascii=False, indent=2)}"
-        f"\n\nuser_prompt:\n{user_prompt}"
-    )
+    # Build user message: manifest + content context + user request
+    user_message_parts = [
+        f"manifest:\n{json.dumps(manifest, ensure_ascii=False, indent=2)}",
+    ]
+    if content_md.strip():
+        # Truncate if too long to avoid blowing context window
+        md_snippet = content_md[:6000] + ("\n[... truncated ...]" if len(content_md) > 6000 else "")
+        user_message_parts.append(f"content_md (nội dung hiện tại của document):\n{md_snippet}")
+    user_message_parts.append(f"user_prompt:\n{user_prompt}")
+
+    user_message = "\n\n".join(user_message_parts)
 
     try:
         response = client.chat.completions.create(

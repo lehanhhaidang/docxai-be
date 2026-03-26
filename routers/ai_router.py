@@ -22,7 +22,7 @@ async def ai_intent(req: IntentRequest):
         raise HTTPException(404, str(exc)) from exc
 
     try:
-        spec = await get_format_spec(session.manifest, req.user_prompt)
+        spec = await get_format_spec(session.manifest, req.user_prompt, session.content_md)
     except AIError as exc:
         raise HTTPException(502, str(exc)) from exc
 
