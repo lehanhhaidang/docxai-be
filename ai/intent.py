@@ -15,26 +15,62 @@ def _strip_fences(raw: str) -> str:
     return raw.strip()
 
 
-async def get_format_spec(manifest: dict, user_prompt: str, content_md: str = "") -> dict:
+def _make_client(user_api_key: str | None, user_provider: str | None) -> OpenAI:
     """
-    Call Claudible (OpenAI-compatible) with manifest + content_md + user prompt.
-    Returns a parsed Format Spec dict.
-    Raises AIError on API failure or invalid JSON.
+    Build an OpenAI-compatible client.
+    Priority: user-supplied key > server claudible key.
+    Supported providers: "anthropic" | "openai" | "claudible" (default)
     """
-    if not settings.ai_api_key:
-        raise AIError("CLAUDIBLE_API_KEY is not configured")
+    if user_api_key:
+        provider = (user_provider or "openai").lower()
+        if provider == "anthropic":
+            return OpenAI(
+                api_key=user_api_key,
+                base_url="https://api.anthropic.com/v1",
+            )
+        elif provider == "openai":
+            return OpenAI(api_key=user_api_key)
+        else:
+            # Treat as generic OpenAI-compatible
+            return OpenAI(api_key=user_api_key)
 
-    client = OpenAI(
+    # Fallback: server claudible key
+    if not settings.ai_api_key:
+        raise AIError("No AI API key configured. Please provide your own API key.")
+    return OpenAI(
         api_key=settings.ai_api_key,
         base_url=settings.ai_base_url,
     )
 
-    # Build user message: manifest + content context + user request
+
+def _resolve_model(user_provider: str | None) -> str:
+    provider = (user_provider or "").lower()
+    if provider == "anthropic":
+        return "claude-sonnet-4-20250514"
+    elif provider == "openai":
+        return "gpt-4o"
+    return settings.ai_model  # claudible default
+
+
+async def get_format_spec(
+    manifest: dict,
+    user_prompt: str,
+    content_md: str = "",
+    user_api_key: str | None = None,
+    user_provider: str | None = None,
+) -> dict:
+    """
+    Call AI with manifest + content_md + user prompt.
+    Uses user-supplied key/provider when available, falls back to server key.
+    Raises AIError on API failure or invalid JSON.
+    """
+    client = _make_client(user_api_key, user_provider)
+    model = _resolve_model(user_provider if user_api_key else None)
+
     user_message_parts = [
         f"manifest:\n{json.dumps(manifest, ensure_ascii=False, indent=2)}",
     ]
     if content_md.strip():
-        # Truncate if too long to avoid blowing context window
         md_snippet = content_md[:6000] + ("\n[... truncated ...]" if len(content_md) > 6000 else "")
         user_message_parts.append(f"content_md (nội dung hiện tại của document):\n{md_snippet}")
     user_message_parts.append(f"user_prompt:\n{user_prompt}")
@@ -43,7 +79,7 @@ async def get_format_spec(manifest: dict, user_prompt: str, content_md: str = ""
 
     try:
         response = client.chat.completions.create(
-            model=settings.ai_model,
+            model=model,
             max_tokens=4096,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
