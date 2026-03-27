@@ -7,7 +7,7 @@ from extractor.unzip import unzip_docx
 from extractor.parser import parse_document, manifest_to_markdown, manifest_to_html
 from executor.style_executor import (
     apply_remap_styles, apply_body_font, apply_margins, ensure_paragraph_style,
-    apply_line_spacing, reset_direct_paragraph_spacing,
+    apply_line_spacing, reset_direct_paragraph_spacing, reset_direct_run_formatting,
 )
 from executor.block_executor import (
     iter_body_items, apply_heading_level, apply_alignment,
@@ -47,6 +47,7 @@ def apply_format_spec(docx_bytes: bytes, spec: dict) -> tuple[bytes, dict, str, 
     # 2. Body font + margins
     if spec.get("font"):
         apply_body_font(doc, spec["font"])
+        reset_direct_run_formatting(doc)   # strip inline font overrides
     if spec.get("margins"):
         apply_margins(doc, spec["margins"])
 

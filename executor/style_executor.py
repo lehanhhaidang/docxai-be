@@ -120,7 +120,23 @@ def apply_line_spacing(doc: Document, spacing_spec: dict) -> None:
         _set_spacing_on_pPr(pPr, line_twips, before_twips, after_twips)
 
 
-def reset_direct_paragraph_spacing(doc: Document) -> None:
+def reset_direct_run_formatting(doc: Document) -> None:
+    """
+    Strip direct font name/size overrides from every run in the document body
+    so that style-level font (applied via apply_body_font) takes effect.
+
+    Removes w:rFonts and w:sz / w:szCs from each run's w:rPr.
+    Preserves bold, italic, underline, color.
+    """
+    body = doc.element.body
+    for r in body.iter(_W + "r"):
+        rPr = r.find(_W + "rPr")
+        if rPr is None:
+            continue
+        for tag in (_W + "rFonts", _W + "sz", _W + "szCs"):
+            el = rPr.find(tag)
+            if el is not None:
+                rPr.remove(el)
     """
     Remove direct w:spacing overrides from every paragraph in the document body.
 
