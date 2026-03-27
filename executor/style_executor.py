@@ -120,6 +120,20 @@ def apply_line_spacing(doc: Document, spacing_spec: dict) -> None:
         _set_spacing_on_pPr(pPr, line_twips, before_twips, after_twips)
 
 
+def reset_direct_paragraph_spacing(doc: Document) -> None:
+    """
+    Remove direct w:spacing overrides from every paragraph in the document body.
+    """
+    body = doc.element.body
+    for p in body.iter(_W + "p"):
+        pPr = p.find(_W + "pPr")
+        if pPr is None:
+            continue
+        spacing = pPr.find(_W + "spacing")
+        if spacing is not None:
+            pPr.remove(spacing)
+
+
 def reset_direct_run_formatting(doc: Document) -> None:
     """
     Strip direct font name/size overrides from every run in the document body
