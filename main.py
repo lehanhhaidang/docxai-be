@@ -10,6 +10,7 @@ from core import session_store, settings
 from routers import (
     import_router, apply_router, ai_router,
     ingest_router, export_router, session_router,
+    template_router,
 )
 
 
@@ -51,6 +52,7 @@ app.include_router(ai_router)
 app.include_router(ingest_router)
 app.include_router(export_router)
 app.include_router(session_router)
+app.include_router(template_router)
 
 
 @app.get("/health", tags=["health"])

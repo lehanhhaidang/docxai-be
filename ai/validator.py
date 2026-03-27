@@ -41,3 +41,15 @@ def validate_format_spec(manifest: dict, spec: dict) -> None:
         before_id = int(toc.get("insert_before_id", -1))
         if before_id != -1 and before_id not in block_ids:
             raise SpecValidationError(f"toc: unknown insert_before_id {before_id}")
+
+    spacing = spec.get("spacing")
+    if spacing is not None:
+        if not isinstance(spacing, dict):
+            raise SpecValidationError("spacing: must be an object")
+        line = spacing.get("line")
+        if line is not None and line not in (1.0, 1.15, 1.5, 2.0):
+            raise SpecValidationError(f"spacing.line: invalid value {line!r} — must be 1.0, 1.15, 1.5, or 2.0")
+        for field in ("before_pt", "after_pt"):
+            val = spacing.get(field)
+            if val is not None and (not isinstance(val, (int, float)) or val < 0):
+                raise SpecValidationError(f"spacing.{field}: must be a non-negative number")

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from urllib.parse import quote
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import Response
 from pydantic import BaseModel
@@ -32,8 +33,12 @@ async def export_docx(req: ExportRequest):
     stem = session.filename.rsplit(".", 1)[0] if "." in session.filename else session.filename
     filename = f"{stem}.docx"
 
+    # RFC 5987 — hỗ trợ tên file UTF-8 (tiếng Việt, ký tự đặc biệt)
+    encoded = quote(filename, safe="")
+    content_disposition = f"attachment; filename*=UTF-8''{encoded}"
+
     return Response(
         content=session.docx_bytes,
         media_type=DOCX_MIME,
-        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        headers={"Content-Disposition": content_disposition},
     )

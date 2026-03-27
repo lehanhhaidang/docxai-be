@@ -1,0 +1,74 @@
+[
+  {
+    "id": "luan_van_it",
+    "name": "Luận văn / Khóa luận IT",
+    "description": "Chuẩn ĐHQG / Bách Khoa — Times New Roman 13pt, margin 3/2/2/2, justify, 1.5 line",
+    "category": "academic",
+    "format_spec": {
+      "font": { "body": "Times New Roman", "size": 13 },
+      "margins": { "top": 2.0, "bottom": 2.0, "left": 3.0, "right": 2.0 },
+      "alignment": { "default": "JUSTIFY", "headings": "LEFT" },
+      "spacing": { "line": 1.5, "before_pt": 6, "after_pt": 6 },
+      "remap_styles": {
+        "Heading 1": { "font": "Times New Roman", "size": 14, "bold": true, "alignment": "LEFT" },
+        "Heading 2": { "font": "Times New Roman", "size": 13, "bold": true, "alignment": "LEFT" },
+        "Heading 3": { "font": "Times New Roman", "size": 13, "bold": true, "alignment": "LEFT" }
+      }
+    },
+    "ai_instruction": "Đây là tài liệu học thuật chuẩn luận văn ĐHQG. Khi thêm nội dung, viết theo phong cách học thuật, câu đầy đủ chủ vị, không dùng bullet point trừ khi cần thiết. Chỉ sinh insert_blocks và delete_blocks, không thay đổi font/margin/spacing vì đã có template."
+  },
+  {
+    "id": "tech_spec",
+    "name": "Tài liệu kỹ thuật (Technical Spec)",
+    "description": "API docs, SRS, Design doc — Calibri 11pt, margin đều 2.54cm, left align, 1.15 line",
+    "category": "technical",
+    "format_spec": {
+      "font": { "body": "Calibri", "size": 11 },
+      "margins": { "top": 2.54, "bottom": 2.54, "left": 2.54, "right": 2.54 },
+      "alignment": { "default": "LEFT", "headings": "LEFT" },
+      "spacing": { "line": 1.15, "before_pt": 4, "after_pt": 4 },
+      "remap_styles": {
+        "Heading 1": { "font": "Calibri", "size": 16, "bold": true, "alignment": "LEFT" },
+        "Heading 2": { "font": "Calibri", "size": 13, "bold": true, "alignment": "LEFT" },
+        "Heading 3": { "font": "Calibri", "size": 11, "bold": true, "alignment": "LEFT" }
+      }
+    },
+    "ai_instruction": "Đây là tài liệu kỹ thuật nội bộ. Khi thêm nội dung, dùng ngôn ngữ rõ ràng, ngắn gọn, có thể dùng bullet list và numbered list. Chỉ sinh insert_blocks và delete_blocks, không thay đổi font/margin/spacing."
+  },
+  {
+    "id": "bao_cao_hanh_chinh",
+    "name": "Báo cáo hành chính / Công văn",
+    "description": "Báo cáo tiến độ, biên bản họp — Times New Roman 13pt, margin 3/2/2/2, justify, single",
+    "category": "administrative",
+    "format_spec": {
+      "font": { "body": "Times New Roman", "size": 13 },
+      "margins": { "top": 2.0, "bottom": 2.0, "left": 3.0, "right": 2.0 },
+      "alignment": { "default": "JUSTIFY", "headings": "CENTER" },
+      "spacing": { "line": 1.0, "before_pt": 0, "after_pt": 6 },
+      "remap_styles": {
+        "Heading 1": { "font": "Times New Roman", "size": 14, "bold": true, "alignment": "CENTER" },
+        "Heading 2": { "font": "Times New Roman", "size": 13, "bold": true, "alignment": "LEFT" },
+        "Heading 3": { "font": "Times New Roman", "size": 13, "bold": false, "alignment": "LEFT" }
+      }
+    },
+    "ai_instruction": "Đây là văn bản hành chính. Khi thêm nội dung, dùng văn phong trang trọng, đúng quy cách hành chính Việt Nam. Chỉ sinh insert_blocks và delete_blocks, không thay đổi font/margin/spacing."
+  },
+  {
+    "id": "proposal_it",
+    "name": "Project Proposal / Đề xuất dự án IT",
+    "description": "Gửi khách hàng / ban lãnh đạo — Calibri 11pt, margin 2.54cm, clean modern",
+    "category": "business",
+    "format_spec": {
+      "font": { "body": "Calibri", "size": 11 },
+      "margins": { "top": 2.54, "bottom": 2.54, "left": 2.54, "right": 2.54 },
+      "alignment": { "default": "LEFT", "headings": "LEFT" },
+      "spacing": { "line": 1.15, "before_pt": 6, "after_pt": 6 },
+      "remap_styles": {
+        "Heading 1": { "font": "Calibri Light", "size": 16, "bold": false, "alignment": "LEFT" },
+        "Heading 2": { "font": "Calibri Light", "size": 13, "bold": false, "alignment": "LEFT" },
+        "Heading 3": { "font": "Calibri", "size": 11, "bold": true, "alignment": "LEFT" }
+      }
+    },
+    "ai_instruction": "Đây là tài liệu đề xuất dự án IT cho khách hàng. Khi thêm nội dung, dùng ngôn ngữ chuyên nghiệp, thuyết phục, tập trung vào giá trị và lợi ích. Chỉ sinh insert_blocks và delete_blocks, không thay đổi font/margin/spacing."
+  }
+]

@@ -4,6 +4,7 @@ from routers.ai_router import router as ai_router
 from routers.ingest_router import router as ingest_router
 from routers.export_router import router as export_router
 from routers.session_router import router as session_router
+from routers.template_router import router as template_router
 
 __all__ = [
     "import_router",
@@ -12,4 +13,5 @@ __all__ = [
     "ingest_router",
     "export_router",
     "session_router",
+    "template_router",
 ]

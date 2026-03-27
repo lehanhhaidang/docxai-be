@@ -7,6 +7,7 @@ from extractor.unzip import unzip_docx
 from extractor.parser import parse_document, manifest_to_markdown, manifest_to_html
 from executor.style_executor import (
     apply_remap_styles, apply_body_font, apply_margins, ensure_paragraph_style,
+    apply_line_spacing, reset_direct_paragraph_spacing,
 )
 from executor.block_executor import (
     iter_body_items, apply_heading_level, apply_alignment,
@@ -48,6 +49,11 @@ def apply_format_spec(docx_bytes: bytes, spec: dict) -> tuple[bytes, dict, str, 
         apply_body_font(doc, spec["font"])
     if spec.get("margins"):
         apply_margins(doc, spec["margins"])
+
+    # 2b. Line spacing + paragraph spacing
+    if spec.get("spacing"):
+        apply_line_spacing(doc, spec["spacing"])
+        reset_direct_paragraph_spacing(doc)
 
     # 3. Heading levels + paragraph alignment
     heading_ids = {int(h["id"]): int(h["level"]) for h in spec.get("headings", [])}

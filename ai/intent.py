@@ -58,6 +58,7 @@ async def get_format_spec(
     content_md: str = "",
     user_api_key: str | None = None,
     user_provider: str | None = None,
+    system_prompt: str | None = None,
 ) -> dict:
     """
     Call AI with manifest + content_md + user prompt.
@@ -66,6 +67,9 @@ async def get_format_spec(
     """
     client = _make_client(user_api_key, user_provider)
     model = _resolve_model(user_provider if user_api_key else None)
+
+    if system_prompt is None:
+        system_prompt = SYSTEM_PROMPT
 
     user_message_parts = [
         f"manifest:\n{json.dumps(manifest, ensure_ascii=False, indent=2)}",
@@ -82,7 +86,7 @@ async def get_format_spec(
             model=model,
             max_tokens=4096,
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
             ],
         )
